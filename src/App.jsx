@@ -100,7 +100,7 @@ export default function App() {
             type="text"
             value={nomECS}
             onChange={e => setNomECS(e.target.value)}
-            placeholder="Ex : ECS TB CONFÉRENCE A S3"
+            placeholder="Saisissez le nom de l'ECS..."
           />
         </section>
 
@@ -121,7 +121,7 @@ export default function App() {
             rows={4}
             value={defautsArrivee}
             onChange={e => setDefautsArrivee(e.target.value)}
-            placeholder={"Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\nZ13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
+            placeholder="Saisissez les défauts à l'arrivée..."
           />
         </section>
 
@@ -135,7 +135,7 @@ export default function App() {
             rows={5}
             value={intervention}
             onChange={e => setIntervention(e.target.value)}
-            placeholder="Ex : Contrôle du détecteur Z13/A101 effectué sur place. Lecture via BTCL-X confirmant un encrassement au seuil maximum. Remplacement du détecteur à programmer."
+            placeholder="Décrivez l'intervention réalisée..."
           />
         </section>
 
@@ -156,7 +156,7 @@ export default function App() {
             rows={4}
             value={defautsDepart}
             onChange={e => setDefautsDepart(e.target.value)}
-            placeholder={"Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\nZ13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
+            placeholder="Saisissez les défauts au départ..."
           />
         </section>
 
