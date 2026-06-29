@@ -20,37 +20,47 @@ const ETATS_DEPART = [
 ]
 
 export default function App() {
+  const [nomECS, setNomECS] = useState('')
   const [etatArrivee, setEtatArrivee] = useState('')
-  const [detailArrivee, setDetailArrivee] = useState('')
+  const [defautsArrivee, setDefautsArrivee] = useState('')
   const [intervention, setIntervention] = useState('')
   const [etatDepart, setEtatDepart] = useState('')
-  const [detailDepart, setDetailDepart] = useState('')
+  const [defautsDepart, setDefautsDepart] = useState('')
   const [rapport, setRapport] = useState('')
   const [copie, setCopie] = useState(false)
 
+  function formaterDefauts(texte) {
+    return texte.split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0)
+      .map(l => l.startsWith('•') ? l : '• ' + l)
+      .join('\n')
+  }
+
   function generer() {
     let txt = ''
+    const ecs = nomECS.trim()
 
-    if (etatArrivee || detailArrivee) {
-      txt += `À la prise en charge du site, ${etatArrivee ? etatArrivee + ' :' : ''}\n`
-      if (detailArrivee) txt += detailArrivee + '\n'
+    if (etatArrivee || defautsArrivee) {
+      txt += `À la prise en charge du site, ${ecs ? 'l\'' + ecs + ' ' : ''}${etatArrivee} :`
+      if (defautsArrivee) txt += '\n' + formaterDefauts(defautsArrivee)
+      txt += '\n'
     }
 
     if (intervention) {
-      txt += '\n' + intervention + '\n'
+      txt += '\n' + intervention.trim() + '\n'
     }
 
-    if (etatDepart || detailDepart) {
-      txt += `\nAvant restitution du site, ${etatDepart ? etatDepart + ' :' : ''}\n`
-      if (detailDepart) txt += detailDepart
+    if (etatDepart || defautsDepart) {
+      txt += `\nAvant restitution du site, ${ecs ? 'l\'' + ecs + ' ' : ''}${etatDepart} :`
+      if (defautsDepart) txt += '\n' + formaterDefauts(defautsDepart)
     }
 
     return txt.trim()
   }
 
   function handleGenerer() {
-    const txt = generer()
-    setRapport(txt)
+    setRapport(generer())
   }
 
   function handleCopier() {
@@ -64,11 +74,12 @@ export default function App() {
   }
 
   function handleReset() {
+    setNomECS('')
     setEtatArrivee('')
-    setDetailArrivee('')
+    setDefautsArrivee('')
     setIntervention('')
     setEtatDepart('')
-    setDetailDepart('')
+    setDefautsDepart('')
     setRapport('')
   }
 
@@ -80,7 +91,21 @@ export default function App() {
       </header>
 
       <main>
-        {/* ARRIVÉE */}
+        <section className="bloc">
+          <div className="bloc-header">
+            <span className="badge badge-ecs">Équipement</span>
+          </div>
+          <label className="field-label">Nom de l'ECS</label>
+          <input
+            type="text"
+            value={nomECS}
+            onChange={e => setNomECS(e.target.value)}
+            placeholder="Ex : ECS TB CONFÉRENCE A S3"
+          />
+        </section>
+
+        <div className="divider" />
+
         <section className="bloc">
           <div className="bloc-header">
             <span className="badge badge-arrivee">Arrivée</span>
@@ -91,18 +116,17 @@ export default function App() {
               {ETATS_ARRIVEE.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
-          <label className="field-label">Détail de l'état à l'arrivée</label>
+          <label className="field-label">Défauts à l'arrivée (un par ligne)</label>
           <textarea
             rows={4}
-            value={detailArrivee}
-            onChange={e => setDetailArrivee(e.target.value)}
-            placeholder={"Ex : l'ECS TB CONFÉRENCE A S3 présentait les dérangements suivants :\n• Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\n• Z13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
+            value={defautsArrivee}
+            onChange={e => setDefautsArrivee(e.target.value)}
+            placeholder={"Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\nZ13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
           />
         </section>
 
         <div className="divider" />
 
-        {/* INTERVENTION */}
         <section className="bloc">
           <div className="bloc-header">
             <span className="badge badge-intervention">Intervention réalisée</span>
@@ -117,7 +141,6 @@ export default function App() {
 
         <div className="divider" />
 
-        {/* DÉPART */}
         <section className="bloc">
           <div className="bloc-header">
             <span className="badge badge-depart">Départ</span>
@@ -128,16 +151,15 @@ export default function App() {
               {ETATS_DEPART.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
-          <label className="field-label">Détail de l'état au départ</label>
+          <label className="field-label">Défauts au départ (un par ligne)</label>
           <textarea
             rows={4}
-            value={detailDepart}
-            onChange={e => setDetailDepart(e.target.value)}
-            placeholder={"Ex : l'ECS TB CONFÉRENCE A S3 demeurait en état de dérangement :\n• Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\n• Z13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
+            value={defautsDepart}
+            onChange={e => setDefautsDepart(e.target.value)}
+            placeholder={"Z15/A113 CIRCULATION COMMUNE NIV. LIVRAISON (adresse absente)\nZ13/A101 CIRCULATION COMMUNE NIV. LIVRAISON TA (encrassement max)"}
           />
         </section>
 
-        {/* ACTIONS */}
         <div className="actions">
           <button className="btn btn-secondary" onClick={handleReset}>Réinitialiser</button>
           <button className="btn btn-secondary" onClick={handleGenerer}>Générer</button>
@@ -147,7 +169,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* PREVIEW */}
         {rapport && (
           <section className="preview-section">
             <div className="preview-header">
